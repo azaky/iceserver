@@ -31,6 +31,18 @@ const addInterests = (id, options) => {
     return interests.doc(id).set({ options });
 }
 
+const colors = db.collection('colors');
+
+const getColor = (id) => {
+    return colors.doc(id).get()
+        .then(doc => {
+            if (!doc.exists) {
+                return false;
+            }
+            return doc.data().color;
+        });
+}
+
 // const setCartState = (isOpen) => {
 //     return cartOpener.set({cart: isOpen}).catch((err) => {
 //         logger.error(`Error setCartState to ${isOpen}: ${err}`);
@@ -69,5 +81,6 @@ module.exports = {
     addAudiences,
     addPoll,
     addInterests,
+    getColor,
 };
 

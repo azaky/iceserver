@@ -7,7 +7,7 @@ const https = require('https');
 const config = require('./config');
 const logger = require('./logger');
 
-const {db, addAudiences, addPoll, addInterests} = require('./firebase');
+const {db, addAudiences, addPoll, addInterests, getColor} = require('./firebase');
 
 const app = express();
 
@@ -60,7 +60,7 @@ app.post('/poll', (req, res) => {
     }).catch(err => {
         logger.error('POST /poll:', err);
         res.status(500).json({ error: err });
-    })
+    });
 });
 
 app.post('/interest', (req, res) => {
@@ -69,7 +69,16 @@ app.post('/interest', (req, res) => {
     }).catch(err => {
         logger.error('POST /interest:', err);
         res.status(500).json({ error: err });
-    })
+    });
+});
+
+app.get('/color/:color', (req, res) => {
+    getColor(req.params.color).then(color => {
+        res.status(200).json({ color });
+    }).catch(err => {
+        logger.error('GET /color:', err);
+        res.status(500).json({ error: err });
+    });
 });
 
 const port = config.server.port;
