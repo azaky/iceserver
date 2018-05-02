@@ -11,8 +11,18 @@ const db = admin.firestore();
 
 const audiences = db.collection('audiences');
 
-const addAudiences = data => {
-    return audiences.add(data)
+const addAudiences = (id, data) => {
+    return audiences.doc(id).set(data)
+        .then(res => {
+            const id = res._referencePath.segments[1];
+            return id;
+        });
+};
+
+const rsvps = db.collection('rsvps');
+
+const addRsvps = data => {
+    return rsvps.add(data)
         .then(res => {
             const id = res._referencePath.segments[1];
             return id;
@@ -43,38 +53,6 @@ const getColor = (id) => {
         });
 }
 
-// const setCartState = (isOpen) => {
-//     return cartOpener.set({cart: isOpen}).catch((err) => {
-//         logger.error(`Error setCartState to ${isOpen}: ${err}`);
-//         throw err;
-//     });
-// };
-
-// const orderObserver = order.onSnapshot(querySnapshot => {
-//     const size = querySnapshot.size;
-//     logger.info(`Received order query snapshot of size ${size}`);
-//     if (lastOrderSize === -1) {
-//         lastOrderSize = size;
-//         return;
-//     }
-//     if (size > lastOrderSize) {
-
-//         logger.info('Opening cart ...');
-//         setCartState(true)
-//             .then(() => {
-//                 setTimeout(() => {
-//                     logger.info('Closing cart ...');
-//                     setCartState(false);
-//                     logger.info('Resetting cart ...');
-//                     lastSize = 0;
-//                 }, openOrderDelay);
-//             });
-//     }
-//     lastSize = size;
-// }, err => {
-//     console.log(`Encountered error: ${err}`);
-// });
-
 module.exports = {
     db,
     audiences,
@@ -82,5 +60,6 @@ module.exports = {
     addPoll,
     addInterests,
     getColor,
+    addRsvps,
 };
 

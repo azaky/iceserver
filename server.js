@@ -7,7 +7,7 @@ const https = require('https');
 const config = require('./config');
 const logger = require('./logger');
 
-const {db, addAudiences, addPoll, addInterests, getColor} = require('./firebase');
+const {db, addAudiences, addPoll, addInterests, getColor, addRsvps} = require('./firebase');
 
 const app = express();
 
@@ -45,11 +45,20 @@ app.get('/', (req, res) => {
     res.status(200).json({ message: 'IceServer API' });
 });
 
-app.post('/audience', (req, res) => {
-    addAudiences(req.body).then(id => {
+app.post('/rsvp', (req, res) => {
+    addRsvps(req.body).then(id => {
         res.status(200).json({ id });
     }).catch(err => {
-        logger.error('POST /audience:', err);
+        logger.error('POST /rsvp:', err);
+        res.status(500).json({ error: err });
+    })
+});
+
+app.post('/checkin', (req, res) => {
+    addAudiences(req.body.id, req.body).then(() => {
+        res.status(200).json({ message: 'success' });
+    }).catch(err => {
+        logger.error('POST /checkin:', err);
         res.status(500).json({ error: err });
     })
 });
