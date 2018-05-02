@@ -12,11 +12,7 @@ const db = admin.firestore();
 const audiences = db.collection('audiences');
 
 const addAudiences = (id, data) => {
-    return audiences.doc(id).set(data)
-        .then(res => {
-            const id = res._referencePath.segments[1];
-            return id;
-        });
+    return audiences.doc(id).set(data);
 };
 
 const rsvps = db.collection('rsvps');
