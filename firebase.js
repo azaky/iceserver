@@ -12,8 +12,24 @@ const db = admin.firestore();
 const audiences = db.collection('audiences');
 
 const addAudiences = data => {
-    return audiences.add(data);
+    return audiences.add(data)
+        .then(res => {
+            const id = res._referencePath.segments[1];
+            return id;
+        });
 };
+
+const polls = db.collection('pollAnswers');
+
+const addPoll = (id, answer) => {
+    return polls.doc(id).set({ answer });
+};
+
+const interests = db.collection('interests');
+
+const addInterests = (id, options) => {
+    return interests.doc(id).set({ options });
+}
 
 // const setCartState = (isOpen) => {
 //     return cartOpener.set({cart: isOpen}).catch((err) => {
@@ -51,5 +67,7 @@ module.exports = {
     db,
     audiences,
     addAudiences,
+    addPoll,
+    addInterests,
 };
 

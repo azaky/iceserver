@@ -7,7 +7,7 @@ const https = require('https');
 const config = require('./config');
 const logger = require('./logger');
 
-const {db, addAudiences} = require('./firebase');
+const {db, addAudiences, addPoll, addInterests} = require('./firebase');
 
 const app = express();
 
@@ -46,10 +46,28 @@ app.get('/', (req, res) => {
 });
 
 app.post('/audience', (req, res) => {
-    addAudiences(req.body).then(() => {
-        res.status(200).json({ message: 'success' });
+    addAudiences(req.body).then(id => {
+        res.status(200).json({ id });
     }).catch(err => {
         logger.error('POST /audience:', err);
+        res.status(500).json({ error: err });
+    })
+});
+
+app.post('/poll', (req, res) => {
+    addPoll(req.body.id, req.body.options).then(() => {
+        res.status(200).json({ message: 'success' });
+    }).catch(err => {
+        logger.error('POST /poll:', err);
+        res.status(500).json({ error: err });
+    })
+});
+
+app.post('/interest', (req, res) => {
+    addInterests(req.body.id, req.body.options).then(() => {
+        res.status(200).json({ message: 'success' });
+    }).catch(err => {
+        logger.error('POST /interest:', err);
         res.status(500).json({ error: err });
     })
 });
